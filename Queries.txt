@@ -1,0 +1,42 @@
+/* which music genre has the highest revenue? */
+/* First Query */
+SELECT Genre.Name AS "genre",
+       sum(il.UnitPrice * il.Quantity) AS "total revenue"
+FROM Customer
+JOIN Invoice ON Customer.CustomerId =Invoice.CustomerId
+JOIN InvoiceLine il ON Invoice.InvoiceId = il.InvoiceId
+JOIN Track ON il.TrackId = Track.TrackId
+JOIN Genre ON Track.GenreId = Genre.GenreId
+GROUP BY genre
+ORDER BY 2 DESC
+LIMIT 10
+
+/* which contry has the highest revenue? */
+/* Second Query */
+SELECT Country,
+       sum(Invoice.Total) "revenue"
+FROM Customer
+JOIN Invoice
+ON Customer.CustomerId = Invoice.CustomerId
+GROUP BY 1
+ORDER BY 2
+
+/* which sales agent scored higher sales */
+/* Third Query */
+SELECT EmployeeId,
+       e.FirstName,
+       e.LastName,
+       sum(i.total)
+FROM Employee e
+JOIN Customer c ON e.EmployeeId = c.SupportRepId
+JOIN Invoice i ON c.CustomerId = i.CustomerId
+GROUP BY e.EmployeeId
+
+/* what is the average lifetime for every genre in mins */
+/* Forth Query */
+SELECT g.Name,
+       avg(t.Milliseconds)/60000 "avg (mins)"
+FROM Track t
+JOIN Genre g ON t.GenreId = g.GenreId
+GROUP BY 1
+ORDER BY 2 DESC
